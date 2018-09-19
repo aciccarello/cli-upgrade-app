@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const dir = 'src/v4/core';
 const paths = glob.sync(`${dir}/**/*.ts`);
+/*const paths = [ `${dir}/lang.ts` ];*/
 const v4Path = path.resolve(__dirname, '../');
 
 const deps = {};
@@ -40,6 +41,7 @@ paths.forEach((filename) => {
 });
 
 console.log(deps);
+deps['core/request.ts'].push('core/request/providers/node.ts', ...deps['core/request/providers/node.ts']);
 fs.writeFileSync(`${v4Path}/core/dependencies.json`, JSON.stringify(deps, null, '\t'));
 
 run(opts);
