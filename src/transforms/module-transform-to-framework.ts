@@ -1,6 +1,7 @@
 const dependencies = require('../v4/core/dependencies.json');
 const fs = require('fs-extra');
 const match = /^@dojo\/framework\/(core\/.*)/;
+const excludes = ['core/Destroyable', 'core/Evented', 'core/QueuingEvented', 'core/util'];
 
 export = function(file: any, api: any) {
 	let quote: string | undefined;
@@ -10,7 +11,7 @@ export = function(file: any, api: any) {
 		.replaceWith((p: any) => {
 			const { source } = p.node;
 			const matches = match.exec(source.value);
-			if (matches) {
+			if (matches && excludes.indexOf(matches[1]) === -1) {
 				const file = `${matches[1]}.ts`;
 				const filesToCopy = [file, ...dependencies[file]];
 				filesToCopy.forEach((file) => {
