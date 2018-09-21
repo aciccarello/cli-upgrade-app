@@ -16,9 +16,9 @@ const packages = [
 	'@dojo/test-extras'
 ];
 
-async function run(opts: any) {
+async function run(transform: string, opts: any) {
 	try {
-		await command.__runner.run(opts.transform, opts.path, opts);
+		await command.__runner.run(transform, opts.path, opts);
 	} catch (e) {
 		throw Error('Failed to upgrade');
 	}
@@ -58,9 +58,10 @@ const command: Command & { __runner: any } = {
 		const { pattern, dry } = args;
 		const paths = glob.sync(pattern);
 		const hasJSX = paths.some((p: string) => p.match(/\.tsx$/g));
+		const transformV3 = path.resolve(__dirname, 'v3', 'transforms', 'module-transform-to-framework.js');
+		const transformV4 = path.resolve(__dirname, 'v4', 'transforms', 'module-transform-to-framework.js');
 		const opts = {
 			parser: hasJSX ? 'typescript-jsx' : 'typescript',
-			transform: path.resolve(__dirname, 'transforms', 'module-transform-to-framework.js'),
 			path: paths,
 			verbose: 0,
 			babel: false,
@@ -80,9 +81,13 @@ const command: Command & { __runner: any } = {
 			if (!(answer as any).run) {
 				throw Error('Aborting upgrade');
 			}
-			return await run(opts);
+			await run(transformV3, opts);
+			return await run(transformV4, opts);
 		}
-		return await run(opts);
+		console.log('Performing V3 transform');
+		await run(transformV3, opts);
+		console.log('Performing V4 transform');
+		return await run(transformV4, opts);
 	}
 };
 

@@ -9,11 +9,12 @@ const paths = glob.sync(`${dir}/**/*.ts`);
 /*const paths = [ `${dir}/lang.ts` ];*/
 const v4Path = path.resolve(__dirname, '../');
 
+/** @type {{ [coreImport: string]: string[]; }} */
 const deps = {};
 
 const opts = {
 	parser: 'typescript',
-	transform: path.resolve(__dirname, '../scripts/module-transform.js'),
+	transform: path.resolve(__dirname, './module-transform.js'),
 	path: paths,
 	verbose: 1,
 	babel: false,
@@ -40,7 +41,6 @@ paths.forEach((filename) => {
 	deps[filename.replace(`src/v4/`, '')] = list;
 });
 
-console.log(deps);
 deps['core/request.ts'].push('core/request/providers/node.ts', ...deps['core/request/providers/node.ts']);
 fs.writeFileSync(`${v4Path}/core/dependencies.json`, JSON.stringify(deps, null, '\t'));
 

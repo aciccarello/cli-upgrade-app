@@ -21,6 +21,7 @@
 		"./tests/**/*.ts"
 	],
 	"exclude": [
-		"./src/v4/core/**/*.ts"
+		"./src/v4/core",
+		"./src/core"
 	]
 }

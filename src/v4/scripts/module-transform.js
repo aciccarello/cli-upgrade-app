@@ -5,10 +5,10 @@ module.exports = function (file, api) {
 		.find(j.Declaration)
 		.replaceWith((p) => {
 			const { source, type } = p.node;
-			if (type === 'ImportDeclaration' || type === 'ExportAllDeclaration' || type == 'ExportNamedDeclaration' && source && source.value) {
+			if (type === 'ImportDeclaration' || type === 'ExportAllDeclaration' || type === 'ExportNamedDeclaration' && source && source.value) {
 				const matches = match.exec(source.value);
 				if (matches) {
-					const [ match, pkg, rest ] = matches;
+					const [ /* match */, pkg, rest ] = matches;
 					source.value = `@dojo/framework/${pkg}/${rest}`;
 					return { ...p.node, source: { ...source } };
 				}
