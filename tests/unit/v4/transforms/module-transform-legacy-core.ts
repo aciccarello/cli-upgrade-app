@@ -19,7 +19,7 @@ import { EventObject } from '@dojo/framework/core/Evented';
 
 describe('module-transform-legacy-core', () => {
 	it('should transform legacy package imports to local copies', () => {
-		const output = moduleTransform(input, { jscodeshift, stats: () => {} });
+		const output = moduleTransform(input, { jscodeshift, stats: () => {} }, { dry: false });
 		assert.equal(
 			output,
 			`

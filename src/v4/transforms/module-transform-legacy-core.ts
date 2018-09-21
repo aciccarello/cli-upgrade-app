@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const match = /^@dojo\/framework\/(core\/.*)/;
 const excludes = ['core/Destroyable', 'core/Evented', 'core/QueuingEvented', 'core/util'];
 
-export = function(file: any, api: any) {
+export = function(file: any, api: any, options: { dry?: boolean }) {
 	let quote: string | undefined;
 	const j = api.jscodeshift;
 	return j(file.source)
@@ -15,7 +15,9 @@ export = function(file: any, api: any) {
 				const file = `${matches[1]}.ts`;
 				const filesToCopy = [file, ...dependencies[file]];
 				filesToCopy.forEach((file) => {
-					fs.copySync(`${__dirname}/../${file}`, `${process.cwd()}/src/${file}`);
+					if (!options.dry) {
+						fs.copySync(`${__dirname}/../${file}`, `${process.cwd()}/src/${file}`);
+					}
 				});
 				if (!quote) {
 					quote = source.extra.raw.substr(0, 1) === '"' ? 'double' : 'single';

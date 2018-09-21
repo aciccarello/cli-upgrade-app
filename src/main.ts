@@ -59,7 +59,7 @@ const command: Command & { __runner: any } = {
 		const paths = glob.sync(pattern);
 		const hasJSX = paths.some((p: string) => p.match(/\.tsx$/g));
 		const transformV3 = path.resolve(__dirname, 'v3', 'transforms', 'module-transform-to-framework.js');
-		const transformV4 = path.resolve(__dirname, 'v4', 'transforms', 'module-transform-to-framework.js');
+		const transformV4 = path.resolve(__dirname, 'v4', 'transforms', 'module-transform-legacy-core.js');
 		const opts = {
 			parser: hasJSX ? 'typescript-jsx' : 'typescript',
 			path: paths,
