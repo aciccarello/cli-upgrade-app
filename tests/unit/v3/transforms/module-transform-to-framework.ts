@@ -8,8 +8,10 @@ import moduleTransform = require('../../../../src/v3/transforms/module-transform
 
 jscodeshift = jscodeshift.withParser('typescript');
 
-const input = {
-	source: `
+describe('module-transform-to-framework', () => {
+	it('should transform legacy package imports to the new dojo/framework package', () => {
+		const input = {
+			source: `
 import { ProjectorMixin } from '@dojo/widget-core/mixins/Projector';
 import { registerRouterInjector } from '@dojo/routing/RouterInjector';
 import harness from '@dojo/test-extras/harness';
@@ -32,10 +34,8 @@ const projector = new Projector();
 projector.setProperties({ registry });
 projector.append();
 `
-};
+		};
 
-describe('module-transform-to-framework', () => {
-	it('should transform legacy package imports to the new dojo/framework package', () => {
 		const output = moduleTransform(input, { jscodeshift, stats: () => {} });
 		assert.equal(
 			output,
