@@ -1,4 +1,5 @@
 const dependencies = require('../core/dependencies.json');
+const matchImportsExports = require('../matchImportsExports');
 const fs = require('fs-extra');
 const match = /^@dojo\/framework\/(core\/.*)/;
 const excludes = ['core/Destroyable', 'core/Evented', 'core/QueuingEvented', 'core/util'];
@@ -7,7 +8,7 @@ export = function(file: any, api: any, options: { dry?: boolean }) {
 	let quote: string | undefined;
 	const j = api.jscodeshift;
 	return j(file.source)
-		.find(j.ImportDeclaration)
+		.find(j.Declaration, matchImportsExports)
 		.replaceWith((p: any) => {
 			const { source } = p.node;
 			const matches = match.exec(source.value);

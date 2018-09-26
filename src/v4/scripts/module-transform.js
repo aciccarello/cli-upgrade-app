@@ -1,12 +1,5 @@
+const matchImportsExports = require('../matchImportsExports');
 const match = /\/(shim|has)\/(.*)/;
-
-function matchImportsExports(node) {
-	const { source, type } = node;
-	if (type === 'ImportDeclaration' || type === 'ExportAllDeclaration' || type === 'ExportNamedDeclaration' && source && source.value) {
-		return true;
-	}
-	return false;
-}
 
 module.exports = function (file, api) {
     const j = api.jscodeshift;
