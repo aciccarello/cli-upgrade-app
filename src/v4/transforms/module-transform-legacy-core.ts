@@ -13,8 +13,8 @@ export = function(file: any, api: any, options: { dry?: boolean }) {
 			const { source } = p.node;
 			const matches = match.exec(source.value);
 			if (matches && excludes.indexOf(matches[1]) === -1) {
-				const file = `${matches[1]}.ts`;
-				const filesToCopy = [file, ...dependencies[file]];
+				const filePath = `${matches[1]}.ts`;
+				const filesToCopy = [filePath, ...dependencies[filePath]];
 				filesToCopy.forEach((file) => {
 					if (!options.dry) {
 						fs.copySync(`${__dirname}/../${file}`, `${process.cwd()}/src/${file}`);
@@ -23,7 +23,19 @@ export = function(file: any, api: any, options: { dry?: boolean }) {
 				if (!quote) {
 					quote = source.extra.raw.substr(0, 1) === '"' ? 'double' : 'single';
 				}
-				source.value = `./${matches[1]}`;
+				let pathToSrc = '.';
+				const numberOfSegments = file.path.split('/').length;
+				if (file.path.startsWith('src/')) {
+					if (numberOfSegments >= 3) {
+						pathToSrc = '..' + '/..'.repeat(numberOfSegments - 3);
+					}
+				} else {
+					if (numberOfSegments >= 2) {
+						pathToSrc = '../'.repeat(numberOfSegments - 1) + 'src';
+					}
+				}
+
+				source.value = `${pathToSrc}/${matches[1]}`;
 				return { ...p.node, source: { ...source } };
 			}
 			return p.node;
